@@ -3,7 +3,9 @@ package jpabook.jpashop.repository;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+
 import jpabook.jpashop.domain.Order;
+import jpabook.jpashop.repository.order.simplequery.OrderSimpleQueryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
@@ -68,5 +70,37 @@ public class OrderRepository {
             query = query.setParameter("name", orderSearch.getMemberName());
         }
         return query.getResultList();
+    }
+
+    public List<Order> findAllwithMemberDelivery() {
+        String jpql = "select o from Order o " +
+                "join fetch o.member m " +
+                "join fetch o.delivery d";
+        return em.createQuery(jpql, Order.class).getResultList();
+    }
+
+    public List<Order> findAllwithMemberDelivery(int offset, int limit) {
+        String jpql = "select o from Order o " +
+                "join fetch o.member m " +
+                "join fetch o.delivery d";
+        return em.createQuery(jpql, Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
+    public List<OrderSimpleQueryDto> findOrderDtos() {
+        String jpql = "select new jpabook.jpashop.repository.OrderSimpleQueryDto(o.id, m.name, o.orderDate, o.status, d.address) from Order o join o.member m join o.delivery d";
+        return em.createQuery(jpql, OrderSimpleQueryDto.class).getResultList();
+    }
+
+    public List<Order> findAllWithItem() {
+        String jpql = "select distinct o from Order o" +
+                " join fetch o.member m" +
+                " join fetch o.delivery d" +
+                " join fetch o.orderItems oi" +
+                " join fetch oi.item i";
+        return em.createQuery(jpql, Order.class)
+                .getResultList();
     }
 }

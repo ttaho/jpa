@@ -25,7 +25,9 @@ public class MemberApiController {
 
     @GetMapping("/api/v1/members")
     public List<Member> membersV1(){
-        return memberService.findMembers();
+        List<Member> members = memberService.findMembers();
+
+        return members;
     }
 
     @GetMapping("/api/v2/members")

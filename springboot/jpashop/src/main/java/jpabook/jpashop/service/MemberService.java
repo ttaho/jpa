@@ -1,10 +1,9 @@
 package jpabook.jpashop.service;
 
 import java.util.List;
-import java.util.Optional;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
-import lombok.AllArgsConstructor;
+import jpabook.jpashop.repository.MemberRepositoryOld;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,12 +39,12 @@ public class MemberService {
     }
 
     public Member findOne(Long memberId){
-        return memberRepository.findOne(memberId);
+        return memberRepository.findById(memberId).get();
     }
 
     @Transactional
     public void update(Long id, String name) {
-        Member member = memberRepository.findOne(id);
+        Member member = memberRepository.findById(id).get();
         member.setName(name);
     }
 }
